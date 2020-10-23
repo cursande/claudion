@@ -1,0 +1,6 @@
+{:deps     true
+ :dev-http {8080 "public/assets/app"}
+ :builds   {:app {:modules    {:main {:entries [claudion.core]}}
+                  :output-dir "public/assets/app/js"
+                  :asset-path "/assets/app/js"
+                  :target     :browser}}}

@@ -1,0 +1,103 @@
+body {
+    background-color: #FF3CAC;
+    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+}
+
+div#app {
+    display: flex;
+    justify-content: center;
+}
+
+div#app-container {
+    padding: 50px;
+    width: 100%;
+}
+
+/* Hexagon grid */
+.hexagon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 60%;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    width: 1500;
+}
+
+/* Hexagon rows */
+.hxrow {
+    display: inline-flex;
+}
+
+#hxrow-0 {
+    margin-bottom: 1px;
+}
+
+/* Hexagon */
+.hexagon {
+    position: relative;
+    display: inline-block;
+    width: 94px;
+    height: 60.51px;
+    /* border-left: 3px solid black; */
+    /* border-right: 3px solid black; */
+    margin: 29px 1px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hexagon::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    bottom: 100%;
+    /* border-bottom: 28.86px solid black; */
+}
+
+.hexagon::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    top: 100%;
+    width: 0;
+    /* border-top: 28.86px solid black; */
+}
+
+.hexagon-inner {
+    position: relative;
+    width: 105px;
+    height: 60.62px;
+    background-color: rgb(252, 205, 76);
+    background: linear-gradient(yellow, rgb(252, 205, 76));
+    margin: 30.31px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.hexagon-inner::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 48px solid transparent;
+    border-right: 48px solid transparent;
+    z-index: 1;
+    bottom: 100%;
+    border-bottom: 27.71px solid yellow;
+}
+
+.hexagon-inner::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 48px solid transparent;
+    border-right: 48px solid transparent;
+    z-index: 1;
+    top: 100%;
+    border-top: 27.71px solid rgb(252, 205, 76);
+}
