@@ -30,8 +30,10 @@ div#app-container {
     display: inline-flex;
 }
 
-#hxrow-0 {
-    margin-bottom: 1px;
+@-moz-document url-prefix() {
+    #hxrow-0 {
+        margin-bottom: 1px;
+    }
 }
 
 /* Hexagon */
@@ -40,25 +42,22 @@ div#app-container {
     display: inline-block;
     width: 94px;
     height: 60.51px;
-    /* border-left: 3px solid black; */
-    /* border-right: 3px solid black; */
     margin: 29px 1px 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.hexagon::before {
+.hexagon:before {
     content: "";
     position: absolute;
     width: 0;
     border-left: 50px solid transparent;
     border-right: 50px solid transparent;
     bottom: 100%;
-    /* border-bottom: 28.86px solid black; */
 }
 
-.hexagon::after {
+.hexagon:after {
     content: "";
     position: absolute;
     width: 0;
@@ -66,38 +65,101 @@ div#app-container {
     border-right: 50px solid transparent;
     top: 100%;
     width: 0;
-    /* border-top: 28.86px solid black; */
 }
 
 .hexagon-inner {
     position: relative;
     width: 105px;
     height: 60.62px;
-    background-color: rgb(252, 205, 76);
     background: linear-gradient(yellow, rgb(252, 205, 76));
     margin: 30.31px 0;
     display: flex;
     justify-content: center;
 }
 
-.hexagon-inner::before {
+.hexagon-inner:before {
     content: "";
     position: absolute;
     width: 0;
     border-left: 48px solid transparent;
     border-right: 48px solid transparent;
-    z-index: 1;
+    /* z-index: 1; */
     bottom: 100%;
     border-bottom: 27.71px solid yellow;
 }
 
-.hexagon-inner::after {
+.hexagon-inner:after {
     content: "";
     position: absolute;
     width: 0;
     border-left: 48px solid transparent;
     border-right: 48px solid transparent;
-    z-index: 1;
+    /* z-index: 1; */
     top: 100%;
     border-top: 27.71px solid rgb(252, 205, 76);
+}
+
+/* Selected stone/hex  */
+.selected {
+    background: linear-gradient(rgb(255, 255, 180), rgb(255, 255, 100));
+}
+
+.selected img {
+    transform: scale(1.1);
+}
+
+.selected:before {
+    border-bottom: 27.71px solid rgb(255, 255, 180);
+}
+
+.selected:after {
+    border-top: 27.71px solid rgb(255, 255, 100);
+}
+
+/* Stone */
+.stone {
+    width: 60%;
+    height: 60%;
+}
+
+/* Free stones */
+.free img:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 0.1s;
+}
+
+.free img:active {
+    transform: scale(1.1);
+}
+
+/* Locked stones */
+.locked {
+    opacity: 0.5;
+}
+
+/* Stone img */
+
+.colour-green {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(130deg);
+}
+
+.colour-blue {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(200deg);
+}
+
+.colour-red {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(0deg);
+}
+
+.colour-purple {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(245deg);
+}
+
+.colour-pink {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(-20deg);
+}
+
+.wildcard-all {
+    filter: drop-shadow(2px 2px 2px gray) grayscale(100%)
 }
