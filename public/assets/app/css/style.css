@@ -120,6 +120,7 @@ div#app-container {
 .stone {
     width: 60%;
     height: 60%;
+    z-index: 2;
 }
 
 /* Free stones */
@@ -127,10 +128,12 @@ div#app-container {
     cursor: pointer;
     transform: scale(1.1);
     transition: 0.1s;
+    overflow: visible;
 }
 
 .free img:active {
     transform: scale(1.1);
+    overflow: visible;
 }
 
 /* Locked stones */
@@ -140,6 +143,7 @@ div#app-container {
 
 /* Stone img */
 
+/* colour stones */
 .colour-green {
     filter: drop-shadow(2px 2px 2px gray) hue-rotate(130deg);
 }
@@ -153,13 +157,51 @@ div#app-container {
 }
 
 .colour-purple {
-    filter: drop-shadow(2px 2px 2px gray) hue-rotate(245deg);
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(280deg);
 }
 
 .colour-pink {
     filter: drop-shadow(2px 2px 2px gray) hue-rotate(-20deg);
 }
 
-.wildcard-all {
-    filter: drop-shadow(2px 2px 2px gray) grayscale(100%)
+.colour-wildcard {
+    filter: drop-shadow(2px 2px 2px gray) grayscale(100%);
+}
+
+/* wealth stones */
+
+.wealth-tin {
+    filter: drop-shadow(2px 2px 2px gray) grayscale(70%);
+}
+
+.wealth-iron {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(35deg) grayscale(70%);
+}
+
+.wealth-garnet {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(260deg);
+}
+
+.wealth-jade {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(65deg);
+}
+
+.wealth-aquamarine {
+    filter: drop-shadow(2px 2px 2px gray) hue-rotate(140deg);
+}
+
+.wealth-gold {
+    filter: drop-shadow(2px 2px 2px gray);
+}
+
+/* potion */
+
+.potion-potion {
+    filter: drop-shadow(2px 2px 2px gray);
+}
+
+/* life stones */
+
+.life-pale, .life-vibrant {
+    filter: drop-shadow(2px 2px 2px gray);
 }

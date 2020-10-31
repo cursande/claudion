@@ -16,26 +16,24 @@
           (BR [[x y z]] [x (dec y) (inc z)])
           (BL [[x y z]] [(dec x) y (inc z)])]
     (let [coords (stone-coords stone)]
-      [[(L coords)
-        (TL coords)
-        (TR coords)]
-       [(TL coords)
-        (TR coords)
-        (R coords)]
-       [(TR coords)
-        (R coords)
-        (BR coords)]
-       [(R coords)
-        (BR coords)
-        (BL coords)]
-       [(BR coords)
-        (BL coords)
-        (L coords)]
-       [(BL coords)
-        (L coords)
-        (TL coords)]])))
+      [[(L coords) (TL coords) (TR coords)]
+       [(TL coords) (TR coords) (R coords)]
+       [(TR coords) (R coords) (BR coords)]
+       [(R coords) (BR coords) (BL coords)]
+       [(BR coords) (BL coords) (L coords)]
+       [(BL coords) (L coords) (TL coords)]])))
 
-(defn free? [stone]
+(defn- wealth-unlocked? [stone]
+  (let [v (:variant (stone-properties stone))]
+    (case @state/potions-spent
+      0 (= v "tin")
+      1 (= v "iron")
+      2 (= v "garnet")
+      3 (= v "jade")
+      4 (= v "aquamarine")
+      5 (= v "gold"))))
+
+(defn- free-neighbouring-zone? [stone]
   (let [zones      (neighbouring-zones stone)
         free-zones (reduce (fn [_ zone]
                              (when (every? empty? (map fetch-stone zone))
@@ -44,33 +42,77 @@
                            zones)]
     (boolean (seq free-zones))))
 
-(defn wildcard? [stone]
-  (= (:type (stone-properties stone)) "wildcard"))
+(defn free? [stone]
+  (if (= "wealth" (:type (stone-properties stone)))
+    (and (wealth-unlocked? stone) (free-neighbouring-zone? stone))
+    (free-neighbouring-zone? stone)))
 
-(defn stones-match? [stone1 stone2]
-  (or (or (wildcard? stone1) (wildcard? stone2))
-       (= (stone-properties stone1)
-          (stone-properties stone2))))
+(defn- matching-colour? [stone1 stone2]
+  (letfn [(wildcard? [s] (= (:variant (stone-properties s)) "wildcard"))]
+    (let [{stone1-type    :type
+           stone1-variant :variant} (stone-properties stone1)
+          {stone2-type    :type
+           stone2-variant :variant} (stone-properties stone2)]
+    (and (= "colour" stone1-type stone2-type)
+         (or (or (wildcard? stone1) (wildcard? stone2))
+             (= stone1-variant
+                stone2-variant))))))
+
+(defn- opposing-life-stones? [stone1 stone2]
+  (let [{stone1-type    :type
+         stone1-variant :variant} (stone-properties stone1)
+        {stone2-type    :type
+         stone2-variant :variant} (stone-properties stone2)]
+    (and (= "life" stone1-type stone2-type)
+         (not= stone1-variant stone2-variant))))
+
+(defn- potion-and-wealth-stones? [stone1 stone2]
+  (let [{stone1-type :type} (stone-properties stone1)
+        {stone2-type :type} (stone-properties stone2)]
+    (= #{"potion" "wealth"}
+       #{stone1-type stone2-type})))
 
 (defn try-remove-stones! [stone1 stone2]
-  (when (and (not= stone1 stone2)
-             (stones-match? stone1 stone2)
-             (free? stone2))
-    (swap! state/stones dissoc (stone-coords stone1) (stone-coords stone2)))
+  (let [can-remove? (cond
+                      (= stone1 stone2)                         false
+                      (not (free? stone2))                      false
+                      (matching-colour? stone1 stone2)          true
+                      (potion-and-wealth-stones? stone1 stone2) true
+                      (opposing-life-stones? stone1 stone2)     true
+                      :else                                     false)]
+    (when can-remove?
+      (when (potion-and-wealth-stones? stone1 stone2) (swap! state/potions-spent inc))
+      (swap! state/stones dissoc (stone-coords stone1) (stone-coords stone2))))
   (reset! state/selected nil))
 
-(defn select-or-remove-stone! [stone is-free]
-  (if-let [pre-selected (seq (fetch-stone @state/selected))]
-    (try-remove-stones! pre-selected stone)
-    (when is-free (reset! state/selected (stone-coords stone)))))
+(defn- gold-stone? [stone]
+  (= (stone-properties stone)
+     {:type "wealth" :variant "gold"}))
 
+(defn select-or-remove-stone! [stone is-free]
+  (if (and is-free (gold-stone? stone))
+    (swap! state/stones dissoc (stone-coords stone))
+    (if-let [pre-selected (seq (fetch-stone @state/selected))]
+      (try-remove-stones! pre-selected stone)
+      (when is-free (reset! state/selected (stone-coords stone))))))
+
+(defn- stone-img [stone]
+  (let [{:keys [type variant]} (stone-properties stone)]
+    (case type
+      "colour" "images/stone.svg"
+      "wealth" (if (= variant "gold") "images/gold.svg" "images/wealth.svg")
+      "potion" "images/potion.svg"
+      "life"   (if (= variant "pale") "images/pale_dual.svg" "images/vibrant_dual.svg"))))
+
+;; TODO: Would it be worth storing `free?` result on the stone as something that can be accessed
+;; by other fns? So it only needs to be worked out when rendering the stone
 (defn Stone [stone]
   (let [{:keys [type variant]} (first (vals stone))
         stone-class            (str type "-" variant)
         is-free                (free? stone)]
-    [:div.stone {:key (stone-coords stone)
+    [:div.stone {:key   (stone-coords stone)
                  :class (when is-free "free")}
-     [:img {:src     "images/stone.svg"
+     [:img {:src     (stone-img stone)
             :class   [stone-class (when (not is-free) "locked")]
             :onClick #(select-or-remove-stone! stone is-free)}]]))
 
@@ -94,7 +136,7 @@
        x-offsets))
 
 (defn- generate-z-coords [side-length row-lengths]
-  (let [z-indices  (range (- side-length) (inc side-length))]
+  (let [z-indices (range (- side-length) (inc side-length))]
     (map (fn [rl z] (repeat rl z))
          row-lengths
          z-indices)))
@@ -106,7 +148,7 @@
   [x z]
   (let [y  (- (- x) z)
         id (str x "/" y "/" z)]
-    [:li.hexagon {:id  id}
+    [:div.hexagon {:id  id}
      [:div.hexagon-inner {:class (when (= [x y z] @state/selected) "selected")}
       (when-let [found (seq (fetch-stone [x y z]))]
         [Stone found])]]))
@@ -117,20 +159,19 @@
         x-offsets   (derive-x-offsets n-rows side-length)
         x-grid      (generate-x-coords row-lengths x-offsets)
         z-grid      (generate-z-coords side-length row-lengths)]
-    [:ul.hexagon-grid
-     (map (fn [idx x-row z-row row-length]
+    [:div.hexagon-grid
+     (map (fn [idx x-row z-row]
             [:div {:key   idx
                    :id    (str "hxrow-" idx)
-                   :class (str "hxrow hxlength-" row-length)}
+                   :class "hxrow"}
              (map (fn [x z] [Hex x z])
                   x-row
                   z-row)])
           (range (count row-lengths))
           x-grid
-          z-grid
-          row-lengths)]))
+          z-grid)]))
 
-(def n-of-rows "number of rows for hex grid" 11)
+(def n-of-rows "number of rows for hex grid (must be odd)" 11)
 
 (defn app []
   [:div {:id "app-container"}
