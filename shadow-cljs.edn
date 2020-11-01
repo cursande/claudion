@@ -1,6 +1,7 @@
 {:deps     true
- :dev-http {8080 "public/assets/app"}
  :builds   {:app {:modules    {:main {:entries [claudion.core]}}
+                  :devtools   {:http-root "public/assets/app"
+                               :http-port 8080}
                   :output-dir "public/assets/app/js"
                   :asset-path "/assets/app/js"
                   :target     :browser}}}

@@ -1,4 +1,13 @@
 {
+  "name": "claudion",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "shadow-cljs release --verbose app"
+  },
+  "devDependencies": {
+    "shadow-cljs": "2.8.95"
+  },
   "dependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
