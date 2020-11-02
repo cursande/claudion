@@ -7,7 +7,7 @@
 
 [Claudion](https://claudion.netlify.app/) is a web-based clone (at this point) of Sigmar's Garden, a minigame from the very fun [Opus Magnum](http://www.zachtronics.com/opus-magnum/) by Zachtronics.
 
-The objective is to clear all stones off the board. 
+The objective is to clear all stones off the board. A stone can be cleared if it is free, meaning there are at least three empty hexes in a row surrounding that stone.
 
 There are essentially three types of stone:
 
@@ -22,7 +22,6 @@ The order they need to be removed is as follows:
 ![order.png](https://user-images.githubusercontent.com/30610148/97793484-977d7b80-1c40-11eb-9876-2f049d2c5c9e.png)
 
 <img src="public/assets/app/images/pale_dual.svg" width="50" height="50" style="display: inline"><img src="public/assets/app/images/vibrant_dual.svg" width="50" height="50" style="display: inline"> Life stones can be removed in pairs by matching each opposing stone.
-
 
 
 Built and compiled with [shadow-cljs](https://shadow-cljs.org/).

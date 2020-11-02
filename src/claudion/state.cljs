@@ -44,8 +44,8 @@
                     [1 0 -1]  {:type "colour" :variant "blue"}
                     [4 -3 -1] {:type "colour" :variant "wildcard"}
                     [-3 5 -2] {:type "colour" :variant "wildcard"}
-                    [-4 4 0]  {:type "colour" :variant "blue"}
-                    [-3 3 0]  {:type "colour" :variant "blue"}
+                    [-4 4 0]  {:type "colour" :variant "purple"}
+                    [-3 3 0]  {:type "colour" :variant "purple"}
                     [1 -1 0]  {:type "colour" :variant "red"}
                     [2 -2 0]  {:type "colour" :variant "green"}
                     [3 -3 0]  {:type "colour" :variant "blue"}
