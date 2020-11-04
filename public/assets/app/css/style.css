@@ -42,11 +42,26 @@ div#app-container {
     display: inline-block;
     width: 94px;
     height: 60.51px;
-    margin: 29px 1px 0;
+    margin: 30px 1px 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+
+@-moz-document url-prefix() {
+    .hexagon {
+        position: relative;
+        display: inline-block;
+        width: 94px;
+        height: 60.51px;
+        margin: 29px 1px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 
 .hexagon:before {
     content: "";
